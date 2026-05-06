@@ -1,0 +1,223 @@
+# ----------------------------------------
+# LINEAR REGRESSION - BOSTON HOUSING 
+Data Analytics I
+Create a Linear Regression Model using Python/R to predict home prices using Boston Housing
+Dataset (https://www.kaggle.com/c/boston-housing). The Boston Housing dataset contains
+information about various houses in Boston through different parameters. There are 506 samples
+and 14 feature variables in this dataset.
+The objective is to predict the value of prices of the house using the given features.
+
+# ----------------------------------------
+
+import pandas as pd
+from IPython.display import display
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# ----------------------------------------
+# 1. LOAD DATASET (SAFE SOURCE)
+# ----------------------------------------
+
+url = "https://raw.githubusercontent.com/selva86/datasets/master/BostonHousing.csv"
+df = pd.read_csv(url)
+
+# Rename target column for clarity
+df.rename(columns={"medv": "PRICE"}, inplace=True)
+
+print("Dataset Loaded Successfully")
+display(df.head())
+
+# ----------------------------------------
+# 2. DATA OVERVIEW
+# ----------------------------------------
+
+print("\nShape:", df.shape)
+display(df.describe().round(2))
+
+# ----------------------------------------
+# 3. DEFINE FEATURES & TARGET
+# ----------------------------------------
+
+X = df.drop("PRICE", axis=1)
+y = df["PRICE"]
+
+# ----------------------------------------
+# 4. TRAIN-TEST SPLIT
+# ----------------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# ----------------------------------------
+# 5. MODEL TRAINING
+# ----------------------------------------
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+print("\nModel Trained Successfully")
+
+# ----------------------------------------
+# 6. PREDICTION
+# ----------------------------------------
+
+y_pred = model.predict(X_test)
+
+results = pd.DataFrame({
+    "Actual": y_test.values,
+    "Predicted": y_pred
+})
+
+print("\nPredictions:")
+display(results.head())
+
+# ----------------------------------------
+# 7. EVALUATION
+# ----------------------------------------
+
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("\nMean Squared Error:", round(mse, 2))
+print("R² Score:", round(r2, 2))
+
+# ----------------------------------------
+# 8. FEATURE IMPORTANCE
+# ----------------------------------------
+
+coefficients = pd.DataFrame({
+    "Feature": X.columns,
+    "Coefficient": model.coef_
+})
+
+print("\nFeature Impact:")
+display(coefficients.sort_values(by="Coefficient", ascending=False))
+
+
+#Graph
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6,6))
+
+plt.scatter(y_test, y_pred, alpha=0.6)
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Actual vs Predicted House Prices")
+
+# Perfect prediction line
+plt.plot([y_test.min(), y_test.max()],
+         [y_test.min(), y_test.max()],
+         color='red')
+
+plt.grid(True)
+plt.show()
+
+
+
+
+
+Linear Regression using Boston Housing Dataset
+Theory:
+
+Linear Regression is a supervised machine learning algorithm used for predicting continuous numerical values. It establishes a mathematical relationship between independent variables (features) and a dependent variable (target).
+
+The objective is to find the best-fit line that minimizes prediction error.
+
+The linear regression equation is:
+
+y=mx+b
+m
+b
+-10
+-8
+-6
+-4
+-2
+2
+4
+6
+8
+10
+-10
+-5
+5
+10
+y-intercept
+x-intercept
+
+Where:
+
+y = dependent variable
+x = independent variable
+m = slope
+b = intercept
+
+In multiple linear regression:
+
+Y=β
+0
+	​
+
++β
+1
+	​
+
+X
+1
+	​
+
++β
+2
+	​
+
+X
+2
+	​
+
++...+β
+n
+	​
+
+X
+n
+	​
+
+
+The Boston Housing dataset contains housing information such as:
+
+Crime rate
+Number of rooms
+Property tax rate
+Accessibility to highways
+Pollution levels
+
+The model predicts house prices using these features.
+
+Model Evaluation Metrics
+Mean Squared Error (MSE)
+
+MSE=
+n
+1
+	​
+
+∑(y−
+y
+^
+	​
+
+)
+2
+
+R² Score
+
+Measures how well the model explains variability in data.
+
+Applications:
+
+Price prediction
+Sales forecasting
+Economic analysis

@@ -1,0 +1,183 @@
+Text Analytics
+1. Extract Sample document and apply following document preprocessing methods:
+Tokenization, POS Tagging, stop words removal, Stemming and Lemmatization.
+2. Create representation of document by calculating Term Frequency and Inverse Document
+Frequency
+
+
+
+
+
+
+
+#INSTALL & IMPORT
+import nltk
+import pandas as pd
+from IPython.display import display
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+
+#download
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+
+
+#Sample Doc
+text = """Data analytics is the process of analyzing raw data to find trends and answer questions.
+It involves techniques like machine learning, statistics, and data visualization."""
+
+#If Error
+nltk.download('punkt', download_dir='C:/nltk_data')
+nltk.download('punkt_tab', download_dir='C:/nltk_data')
+
+import nltk
+nltk.data.path.append('C:/nltk_data')
+
+
+#TOKENIZATION
+tokens = word_tokenize(text)
+
+print("📌 Tokens:")
+display(tokens)
+
+
+#STOP WORD REMOVAL
+stop_words = set(stopwords.words('english'))
+
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+print("📌 After Stopword Removal:")
+display(filtered_tokens)
+
+#POS TAGGING
+#if error
+nltk.download('averaged_perceptron_tagger', download_dir='C:/nltk_data')
+nltk.download('averaged_perceptron_tagger_eng', download_dir='C:/nltk_data')
+
+import nltk
+nltk.data.path.append('C:/nltk_data')
+
+
+pos_tags = pos_tag(filtered_tokens)
+
+print("📌 POS Tags:")
+display(pos_tags)
+
+
+#STEMMING
+stemmer = PorterStemmer()
+
+stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
+
+print("📌 Stemmed Words:")
+display(stemmed_words)
+
+
+
+#LEMMATIZATION
+lemmatizer = WordNetLemmatizer()
+
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+
+print("📌 Lemmatized Words:")
+display(lemmatized_words)
+
+
+#TERM FREQUENCY (TF)
+vectorizer = CountVectorizer()
+
+X_tf = vectorizer.fit_transform([text])
+
+tf_df = pd.DataFrame(X_tf.toarray(), columns=vectorizer.get_feature_names_out())
+
+print("📊 Term Frequency:")
+display(tf_df)
+
+
+
+#TF-IDF
+tfidf = TfidfVectorizer()
+
+X_tfidf = tfidf.fit_transform([text])
+
+tfidf_df = pd.DataFrame(X_tfidf.toarray(), columns=tfidf.get_feature_names_out())
+
+print("📊 TF-IDF Representation:")
+display(tfidf_df)
+
+
+
+
+
+
+
+Title:
+Text Preprocessing and TF-IDF Representation using Python
+Theory:
+
+Text Analytics is the process of extracting useful information from textual data using Natural Language Processing (NLP).
+
+Text preprocessing is required because raw text contains punctuation, stopwords, and unwanted information.
+
+Tokenization
+
+Splits text into words or sentences.
+
+POS Tagging
+
+Assigns grammatical categories such as noun, verb, adjective, etc.
+
+Stop Word Removal
+
+Removes common words such as “is”, “the”, “and”.
+
+Stemming
+
+Reduces words to root forms.
+
+Example:
+
+Playing → Play
+Lemmatization
+
+Converts words into meaningful base forms using vocabulary.
+
+TF-IDF
+
+Measures importance of words in documents.
+
+Term Frequency:
+
+TF=
+Total terms
+Number of times term appears
+	​
+
+
+Inverse Document Frequency:
+
+IDF=log
+df
+N
+	​
+
+
+Applications:
+
+Search engines
+Chatbots
+Text summarization
+Sentiment analysis
+
+Libraries:
+
+NLTK
+Scikit-learn

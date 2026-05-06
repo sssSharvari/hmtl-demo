@@ -1,0 +1,157 @@
+#-----------------------------------
+#      DATA ANALYTICS II
+1. Implement logistic regression using Python/R to perform classification on
+Social_Network_Ads.csv dataset.
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+on the given dataset
+#-----------------------------------
+
+import pandas as pd
+import numpy as np
+from IPython.display import display
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# LOAD DATASET
+df = pd.read_csv("E:/pic/New folder/Social_Network_Ads.csv")
+
+# DATA PREVIEW
+print("Dataset Preview:")
+display(df.head())
+
+#FEATURES & TARGET
+X = df[["Age", "EstimatedSalary"]]
+y = df["Purchased"]
+
+#FEATURE SCALING
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+#TRAIN-TEST SPLIT
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.2, random_state=42
+)
+
+
+#TRAIN LOGISTIC REGRESSION MODEL
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+print("Model Trained")
+
+
+#PREDICTION
+y_pred = model.predict(X_test)
+
+results = pd.DataFrame({
+    "Actual": y_test.values,
+    "Predicted": y_pred
+})
+
+display(results.head())
+
+
+
+#CONFUSION MATRIX + METRICS
+cm = confusion_matrix(y_test, y_pred)
+
+TN, FP, FN, TP = cm.ravel()
+
+accuracy = accuracy_score(y_test, y_pred)
+error_rate = 1 - accuracy
+precision = TP / (TP + FP)
+recall = TP / (TP + FN)
+
+print("Confusion Matrix:\n", cm)
+
+print("\nMetrics:")
+print("TP:", TP)
+print("FP:", FP)
+print("TN:", TN)
+print("FN:", FN)
+
+print("\nAccuracy:", round(accuracy, 3))
+print("Error Rate:", round(error_rate, 3))
+print("Precision:", round(precision, 3))
+print("Recall:", round(recall, 3))
+
+
+
+
+
+
+
+
+
+Title:
+Logistic Regression Classification using Social Network Ads Dataset
+Theory:
+
+Logistic Regression is a supervised machine learning algorithm used for classification problems. Unlike Linear Regression, Logistic Regression predicts categorical outputs such as:
+
+Yes/No
+True/False
+Purchase/Not Purchase
+
+It uses the sigmoid function to convert predictions into probabilities.
+
+Sigmoid function:
+
+σ(z)=
+1+e
+−z
+1
+	​
+
+
+The output probability ranges between 0 and 1.
+
+In this practical:
+
+User information such as age and salary is analyzed
+Logistic Regression model predicts whether a customer will purchase a product
+Confusion Matrix
+
+A confusion matrix evaluates classification performance.
+
+It contains:
+
+True Positive (TP)
+True Negative (TN)
+False Positive (FP)
+False Negative (FN)
+Evaluation Metrics
+Accuracy
+
+Accuracy=
+TP+TN+FP+FN
+TP+TN
+	​
+
+
+Precision
+
+Precision=
+TP+FP
+TP
+	​
+
+
+Recall
+
+Recall=
+TP+FN
+TP
+	​
+
+
+Applications:
+
+Spam detection
+Medical diagnosis
+Fraud detection
+
+

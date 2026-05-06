@@ -1,0 +1,102 @@
+Write a simple program in SCALA using Apache Spark framework 
+
+1. Introduction
+WordCount is a basic data processing task used to count the number of occurrences of each word in a given text. It is widely used in text analytics, data mining, and natural language processing.
+
+In this implementation, the WordCount problem is solved using core Java, without relying on distributed frameworks. The program reads a text file, processes its contents, and calculates the frequency of each word.
+
+🔹 2. Objective
+The objective of this program is:
+
+To read a text file and compute the number of times each word appears in the input.
+
+The output is a list of words along with their respective counts.
+
+🔹 3. Working of the Program
+The program follows a systematic approach:
+
+🔸 Step 1: Reading Input File
+The input text file is read line by line using BufferedReader. This ensures efficient reading of large files.
+
+🔸 Step 2: Data Cleaning
+Each line is processed to:
+
+Convert all characters to lowercase (to avoid duplicate counts like "Big" and "big")
+
+Remove punctuation and special characters
+
+🔸 Step 3: Tokenization
+The cleaned line is split into individual words using whitespace as a delimiter.
+
+Example:
+
+Input: "Big data is big"
+Output: ["big", "data", "is", "big"]
+🔸 Step 4: Counting Words
+A HashMap is used to store word frequencies:
+
+Key → Word
+
+Value → Count
+
+For each word:
+
+If the word already exists → increment count
+
+Else → initialize count as 1
+
+🔸 Step 5: Sorting Output
+The result is stored in a TreeMap to display words in sorted (alphabetical) order.
+
+🔸 Step 6: Display Output
+The final output prints each word with its frequency.
+
+Example:
+
+big : 2
+data : 1
+is : 1
+🔹 4. Components Used
+✔ BufferedReader
+Used for efficient file reading.
+
+✔ HashMap
+Stores word-frequency pairs.
+
+✔ TreeMap
+Sorts output alphabetically.
+
+🔹 5. Advantages of this Approach
+Simple and easy to implement
+
+No external dependencies
+
+Suitable for small to medium datasets
+
+Helps understand core logic of data processing
+
+🔹 6. Limitations
+Not scalable for very large datasets
+
+Runs on a single machine (no parallel processing)
+
+Slower compared to distributed systems
+
+🔹 7. Relation to MapReduce Concept
+Although implemented in Java, this program conceptually follows the MapReduce model:
+
+Phase	Java Implementation
+Map	Splitting lines into words
+Shuffle	Grouping words using HashMap
+Reduce	Counting occurrences
+🔹 8. Applications
+Text analysis
+
+Log file processing
+
+Search engines
+
+Data analytics
+
+🔹 9. Conclusion
+The WordCount program demonstrates how basic data processing tasks can be performed using Java. It also provides a foundation for understanding more advanced frameworks like Hadoop and Spark, where the same logic is applied in a distributed manner.

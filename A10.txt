@@ -1,0 +1,178 @@
+#----------------------------------------
+# Data Visualization 3
+PS:
+Download the Iris flower dataset or any other dataset into a DataFrame. (e.g.,
+https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as:
+1. List down the features and their types (e.g., numeric, nominal) available in the dataset.
+2. Create a histogram for each feature in the dataset to illustrate the feature distributions.
+3. Create a boxplot for each feature in the dataset.
+4. Compare distributions and identify outliers.
+#---------------------------------------
+
+# ----------------------------------------
+# Data Visualization III (Complete Solution)
+# ----------------------------------------
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load Iris dataset
+df = sns.load_dataset("iris")
+
+print("📊 Dataset Shape:", df.shape)
+display(df.head())
+
+
+# ----------------------------------------
+# 1. FEATURES & TYPES
+# ----------------------------------------
+
+print("\n📌 Feature Classification:\n")
+
+numeric_features = df.select_dtypes(include=['float64', 'int64']).columns
+categorical_features = df.select_dtypes(include=['object']).columns
+
+print("Numeric Features:", list(numeric_features))
+print("Categorical Features:", list(categorical_features))
+
+
+# ----------------------------------------
+# 2. HISTOGRAMS (DISTRIBUTION)
+# ----------------------------------------
+
+df[numeric_features].hist(figsize=(10,8), bins=20)
+plt.suptitle("Feature Distributions (Histograms)")
+plt.show()
+
+
+# ----------------------------------------
+# 3. BOXPLOTS (OUTLIERS)
+# ----------------------------------------
+
+plt.figure(figsize=(10,6))
+sns.boxplot(data=df[numeric_features])
+plt.title("Boxplot of All Numeric Features")
+plt.show()
+
+
+# Feature-wise boxplots (with species comparison)
+for col in numeric_features:
+    plt.figure()
+    sns.boxplot(x="species", y=col, data=df)
+    plt.title(f"{col} Distribution by Species")
+    plt.show()
+
+
+# ----------------------------------------
+# 4. OUTLIER DETECTION (IQR METHOD)
+# ----------------------------------------
+
+print("\n📌 Outlier Detection using IQR:\n")
+
+for col in numeric_features:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    outliers = df[(df[col] < lower) | (df[col] > upper)]
+
+    print(f"{col}: {len(outliers)} outliers")
+
+
+# ----------------------------------------
+# 5. INFERENCE (IMPORTANT FOR EXAM)
+# ----------------------------------------
+
+print("\n📊 Inference:")
+
+print("""
+1. All four features (sepal_length, sepal_width, petal_length, petal_width)
+   are numeric, while species is categorical.
+
+2. Histograms show:
+   - Petal features have clear separation → strong classification power
+   - Sepal features overlap more → less discriminative
+
+3. Boxplots indicate:
+   - Some outliers exist mainly in sepal_width
+   - Petal features are more consistent
+
+4. Overall:
+   - Petal length & width are the most important features for distinguishing species.
+""")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Title:
+Visualization and Analysis of Iris Flower Dataset using Python
+Theory:
+
+The Iris dataset is one of the most widely used datasets in machine learning and data analytics. It contains measurements of flowers belonging to three species:
+
+Iris-setosa
+Iris-versicolor
+Iris-virginica
+
+The dataset includes the following numeric features:
+
+Sepal Length
+Sepal Width
+Petal Length
+Petal Width
+
+The main objective of this practical is to analyze feature distributions and identify outliers using graphical visualization techniques.
+
+Histogram
+
+Histograms are used to represent frequency distributions of numerical features. They help in understanding:
+
+Data concentration
+Spread of values
+Symmetry
+Skewness
+Boxplot
+
+Boxplots summarize data using quartiles and help in identifying outliers.
+
+Feature Types:
+Numeric Features:
+Sepal Length
+Sepal Width
+Petal Length
+Petal Width
+Categorical Feature:
+Species
+Outlier Detection
+
+Outliers are observations significantly different from normal values. Outliers can affect machine learning model performance and statistical analysis.
+
+Applications:
+Pattern recognition
+Classification problems
+Machine learning training
+Biological data analysis
+
+Libraries used:
+
+Pandas
+Matplotlib

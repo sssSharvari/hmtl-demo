@@ -1,0 +1,230 @@
+# ----------------------------------------
+# DATA WRANGLING I - PRACTICAL
+Data Wrangling, I
+Perform the following operations using Python on any open source dataset (e.g., data.csv)
+1. Import all the required Python Libraries.
+2. Locate an open source data from the web (e.g., https://www.kaggle.com). Provide a clear
+ description of the data and its source (i.e., URL of the web site).
+3. Load the Dataset into pandas dataframe.
+4. Data Preprocessing: check for missing values in the data using pandas isnull(), describe()
+function to get some initial statistics. Provide variable descriptions. Types of variables etc.
+Check the dimensions of the data frame.
+5. Data Formatting and Data Normalization: Summarize the types of variables by checking
+the data types (i.e., character, numeric, integer, factor, and logical) of the variables in the
+data set. If variables are not in the correct data type, apply proper type conversions.
+6. Turn categorical variables into quantitative variables in Python.
+In addition to the codes and outputs, explain every operation that you do in the above steps and
+explain everything that you do to import/read/scrape the data set
+# ----------------------------------------
+
+# 1. IMPORT LIBRARIES
+import pandas as pd
+import numpy as np
+from IPython.display import display
+
+
+# ----------------------------------------
+# 2. LOAD DATASET
+# ----------------------------------------
+
+# Replace path with your file location
+df = pd.read_csv("E:/pic/New folder/Titanic-Dataset.csv")
+df_original = df.copy()
+print("Dataset Loaded Successfully\n")
+display(df.head())
+
+# ----------------------------------------
+# 3. BASIC INFORMATION
+# ----------------------------------------
+
+print("\n📌 Dataset Shape:", df.shape)
+
+print("\n📌 Column Names:")
+display(pd.DataFrame(df.columns, columns=["Columns"]))
+
+print("\n📌 Data Types:")
+display(df.dtypes.to_frame("Data Type"))
+
+
+# ----------------------------------------
+# 4. DATA PREPROCESSING
+# ----------------------------------------
+
+# Check missing values
+print("\n📌 Missing Values (Before Cleaning):")
+missing = df.isnull().sum().to_frame("Missing Count")
+display(missing[missing["Missing Count"] > 0])
+
+# Basic statistics
+print("\n📌 Statistical Summary:")
+display(df.describe().round(2))
+
+# ----------------------------------------
+# VARIABLE TYPES
+# ----------------------------------------
+
+print("\n📌 Data Types:")
+display(df.dtypes.to_frame("Data Type"))
+
+
+# ----------------------------------------
+# HANDLE MISSING VALUES
+# ----------------------------------------
+
+# Fill missing values
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
+
+# Drop Cabin safely
+df = df.drop(columns=['Cabin'], errors='ignore')
+
+print("\nMissing Values After Treatment:")
+display(df.isnull().sum().to_frame("Remaining Missing"))
+
+# ----------------------------------------
+# 5. DATA FORMATTING
+# ----------------------------------------
+
+# Convert data types
+df['Survived'] = df['Survived'].astype(int)
+
+print("\nUpdated Data Types:")
+display(df.dtypes.to_frame("Data Type"))
+
+# ----------------------------------------
+# DATA NORMALIZATION
+# ----------------------------------------
+
+# Normalize Age column (Min-Max Scaling)
+df['Age_Normalized'] = (df['Age'] - df['Age'].min()) / (df['Age'].max() - df['Age'].min())
+
+print("\nNormalized Age:")
+display(df[['Age', 'Age_Normalized']].head())
+
+# ----------------------------------------
+# 6. CONVERT CATEGORICAL TO NUMERIC
+# ----------------------------------------
+
+# Convert Sex column
+df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
+
+# One-hot encoding
+df = pd.get_dummies(df, columns=['Embarked'], drop_first=True)
+
+print("\nDataset After Encoding:")
+display(df.head())
+
+
+# ----------------------------------------
+# FINAL DATASET
+# ----------------------------------------
+
+print("\nFinal Dataset Shape:", df.shape)
+
+print("\nFinal Dataset Preview:")
+display(df.head())
+
+
+
+
+
+
+#Compare
+import matplotlib.pyplot as plt
+print("\n Missing Values Comparison (Before vs After)")
+
+before_missing = df_original.isnull().sum()
+after_missing = df.isnull().sum()
+
+comparison_missing = pd.DataFrame({
+    "Before Cleaning": before_missing,
+    "After Cleaning": after_missing
+})
+
+display(comparison_missing[comparison_missing["Before Cleaning"] > 0])
+
+print("\nStatistical Comparison (Before vs After)")
+
+before_stats = df_original.describe().round(2)
+after_stats = df.describe().round(2)
+
+comparison_stats = pd.concat(
+    [before_stats, after_stats],
+    axis=1,
+    keys=["Before", "After"]
+)
+
+display(comparison_stats)
+
+
+
+print("\nAge Distribution: Before vs After")
+
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+
+# Before
+ax[0].hist(df_original['Age'].dropna(), bins=20)
+ax[0].set_title("Before Cleaning")
+
+# After
+ax[1].hist(df['Age'], bins=20)
+ax[1].set_title("After Cleaning")
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Title:
+Data Preprocessing and Data Wrangling using Python
+Theory:
+
+Data Wrangling, also known as Data Preprocessing, is the process of cleaning, organizing, transforming, and preparing raw data for analysis. In real-world applications, collected data is often incomplete, inconsistent, noisy, or unstructured. Such data cannot be directly used for analysis or machine learning because it may produce inaccurate results. Therefore, preprocessing is considered one of the most important stages in the data analytics pipeline.
+
+The main objective of data wrangling is to improve data quality and make the dataset suitable for statistical analysis, visualization, and predictive modeling.
+
+The following preprocessing operations are commonly performed:
+
+Importing datasets from CSV or online sources
+Identifying missing values using isnull()
+Calculating statistical summaries using describe()
+Understanding dimensions using shape
+Identifying variable types such as numeric, categorical, integer, float, and logical variables
+Handling missing values using mean, median, or mode
+Converting incorrect data types into proper formats
+Removing duplicate records
+Converting categorical variables into quantitative variables using encoding methods
+
+Data preprocessing improves:
+
+Accuracy of analysis
+Reliability of machine learning models
+Consistency of data
+Computational efficiency
+
+Python libraries used:
+
+Pandas for data manipulation
+NumPy for numerical operations
+
+Applications:
+
+Business analytics
+Healthcare data analysis
+Banking systems
+Recommendation systems

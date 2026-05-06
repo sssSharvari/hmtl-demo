@@ -1,0 +1,196 @@
+#-------------------------------
+#    Descriptive Statistics 
+Descriptive Statistics - Measures of Central Tendency and variability
+Perform the following operations on any open source dataset (e.g., data.csv)
+1. Provide summary statistics (mean, median, minimum, maximum, standard deviation) for
+a dataset (age, income etc.) with numeric variables grouped by one of the qualitative
+(categorical) variable. For example, if your categorical variable is age groups and
+quantitative variable is income, then provide summary statistics of income grouped by the
+age groups. Create a list that contains a numeric value for each response to the categorical
+variable.
+2. Write a Python program to display some basic statistical details like percentile, mean,
+standard deviation etc. of the species of ‘Iris-setosa’, ‘Iris-versicolor’ and ‘Iris-versicolor’
+of iris.csv dataset.
+Provide the codes with outputs and explain everything that you do in this step
+#-------------------------------
+import pandas as pd
+import numpy as np
+from IPython.display import display
+
+# ----------------------------------------
+# LOAD DATASET
+# ----------------------------------------
+
+# Replace path with your file location
+df = pd.read_csv("E:/pic/New folder/Titanic-Dataset.csv")
+df_original = df.copy()
+print("Dataset Loaded Successfully\n")
+display(df.head())
+
+
+# ----------------------------------------
+# CREATE CATEGORICAL VARIABLE (AGE GROUPS)
+# ----------------------------------------
+# Create Age Groups
+bins = [0, 12, 18, 35, 60, 100]
+labels = ["Child", "Teen", "Young ", "Adult", "Senior"]
+
+df["Age_Group"] = pd.cut(df["Age"], bins=bins, labels=labels)
+
+display(df[["Age", "Age_Group"]].head())
+
+
+
+# ------------------------------------------------
+# GROUPED SUMMARY STATISTICS (AGE GROUP vs FARE)
+# ------------------------------------------------
+grouped_stats = df.groupby("Age_Group")["Fare"].agg(
+    Mean="mean",
+    Median="median",
+    Minimum="min",
+    Maximum="max",
+    Std_Dev="std"
+).round(2)
+
+print("Summary Statistics (Fare grouped by Age Group):")
+display(grouped_stats)
+
+
+
+# ------------------------------------------------
+# CREATE LIST OF VALUES FOR EACH CATEGORY
+# ------------------------------------------------
+fare_lists = df.groupby("Age_Group")["Fare"].apply(list)
+
+fare_df = fare_lists.reset_index(name="Fare Values")
+
+display(fare_df)
+
+summary = df.groupby("Age_Group")["Fare"].agg(
+    Count="count",
+    Sample=lambda x: list(x.head(3))
+)
+
+print("Fare Summary with Sample Values:")
+display(summary)
+
+
+# Part 2
+import pandas as pd
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+
+columns = ["sepal_length", "sepal_width", "petal_length", "petal_width", "species"]
+
+iris = pd.read_csv(url, header=None, names=columns)
+
+iris.head()
+
+
+#FILTER EACH SPECIES
+setosa = iris[iris["species"] == "Iris-setosa"]
+versicolor = iris[iris["species"] == "Iris-versicolor"]
+virginica = iris[iris["species"] == "Iris-virginica"]
+
+
+#FUNCTION FOR STATISTICS
+def stats_summary(data, name):
+    print(f"\nStatistics for {name}")
+    display(data.describe(percentiles=[0.25, 0.5, 0.75]).round(2))
+
+#APPLY FUNCTION
+stats_summary(setosa, "Iris-setosa")
+stats_summary(versicolor, "Iris-versicolor")
+stats_summary(virginica, "Iris-virginica")
+
+
+
+
+
+
+
+
+
+
+Title:
+Measures of Central Tendency and Variability using Python
+Theory:
+
+Descriptive Statistics are statistical methods used to summarize and describe the important characteristics of a dataset. These methods help in understanding patterns, trends, and variability within the data.
+
+Descriptive statistics are divided into two categories:
+
+Measures of Central Tendency
+
+These measures represent the central or average value of the dataset.
+
+Mean
+
+Arithmetic average of all observations.
+
+x
+ˉ
+=
+n
+∑x
+	​
+
+
+Median
+
+Middle value when observations are arranged in ascending order.
+
+Mode
+
+Most frequently occurring value.
+
+Measures of Variability
+
+These measures indicate how spread out the data is.
+
+Range
+
+Difference between maximum and minimum values.
+
+Variance
+
+Measures dispersion of observations from the mean.
+
+σ
+2
+=
+N
+∑(x−μ)
+2
+	​
+
+
+Standard Deviation
+
+Square root of variance.
+
+σ=
+N
+∑(x−μ)
+2
+	​
+
+	​
+
+
+Percentiles
+
+Values below which a percentage of observations fall.
+
+Descriptive statistics help in:
+
+Summarizing large datasets
+Detecting anomalies
+Comparing categories
+Supporting business decisions
+
+Applications:
+
+Financial analysis
+Healthcare research
+Educational statistics

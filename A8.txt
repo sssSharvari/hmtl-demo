@@ -1,0 +1,112 @@
+#Data Visualization1
+1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information
+about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to
+see if we can find any patterns in the data.
+2. Write a code to check how the price of the ticket (column name: 'fare') for each passenger
+is distributed by plotting a histogram.
+
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#LOAD DATASET
+df = sns.load_dataset("titanic")
+
+print("📊 Dataset Shape:", df.shape)
+df.head()
+
+
+#FIND PATTERNS IN DATA
+#A. Survival Count
+sns.countplot(x='survived', data=df)
+plt.title("Survival Count (0 = No, 1 = Yes)")
+plt.show()
+#B. Survival by Gender
+sns.countplot(x='survived', hue='sex', data=df)
+plt.title("Survival by Gender")
+plt.show()
+#Survival by Passenger Class
+sns.countplot(x='survived', hue='class', data=df)
+plt.title("Survival by Passenger Class")
+plt.show()
+#Age Distribution
+sns.histplot(df['age'].dropna(), bins=30)
+plt.title("Age Distribution")
+plt.show()
+
+
+#HISTOGRAM FOR FARE
+sns.histplot(df['fare'], bins=30, kde=True)
+
+plt.title("Fare Distribution")
+plt.xlabel("Fare")
+plt.ylabel("Frequency")
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Title:
+Titanic Dataset Visualization using Histogram
+Theory:
+
+Data Visualization is the graphical representation of data using charts, graphs, and plots. Visualization helps in understanding trends, distributions, patterns, and relationships within the dataset. It simplifies complex numerical data into an easily understandable visual format.
+
+In this practical, the Titanic dataset is used to analyze passenger information. The dataset contains details such as:
+
+Passenger age
+Gender
+Ticket fare
+Passenger class
+Survival status
+
+A histogram is used to study the distribution of ticket fare (fare) among passengers.
+
+Histogram
+
+A histogram is a graphical representation of frequency distribution. It divides data into intervals called bins and shows how many observations fall into each interval.
+
+Histograms help in:
+
+Understanding data distribution
+Detecting skewness
+Identifying concentration of values
+Observing spread of data
+Steps Performed:
+Load Titanic dataset
+Analyze passenger fare column
+Plot histogram using visualization libraries
+Observe fare distribution
+Advantages of Histograms:
+Easy interpretation of data
+Helps identify outliers
+Useful for large datasets
+Displays distribution shape clearly
+
+Applications:
+
+Business analytics
+Financial analysis
+Population studies
+Risk analysis
+
+Libraries used:
+
+Seaborn
+Matplotlib
+Pandas

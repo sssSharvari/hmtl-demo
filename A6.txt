@@ -1,0 +1,204 @@
+#--------------------------------------
+#  DATA ANALYTICS III
+1. Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv dataset.
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall
+on the given dataset.
+#----------------------------------------
+import pandas as pd
+import numpy as np
+from IPython.display import display
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+#LOAD DATASET
+iris = load_iris()
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["species"] = iris.target
+
+display(df.head())
+
+
+#FEATURES & TARGET
+X = df.drop("species", axis=1)
+y = df["species"]
+
+
+#TRAIN-TEST SPLIT
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+
+#. TRAIN NAÏVE BAYES MODEL
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+print("Model Trained")
+
+
+#PREDICTION
+y_pred = model.predict(X_test)
+
+results = pd.DataFrame({
+    "Actual": y_test.values,
+    "Predicted": y_pred
+})
+
+display(results.head())
+
+
+#CONFUSION MATRIX
+cm = confusion_matrix(y_test, y_pred)
+
+print("Confusion Matrix:\n", cm)
+
+
+#TP, FP, TN, FN FOR EACH CLASS
+print("\nClass-wise Metrics:")
+
+for i in range(3):
+    TP = cm[i][i]
+    FP = cm[:, i].sum() - TP
+    FN = cm[i, :].sum() - TP
+    TN = cm.sum() - (TP + FP + FN)
+
+    precision = TP / (TP + FP) if (TP + FP) != 0 else 0
+    recall = TP / (TP + FN) if (TP + FN) != 0 else 0
+
+    print(f"\nClass {i}:")
+    print("TP:", TP, "FP:", FP, "TN:", TN, "FN:", FN)
+    print("Precision:", round(precision, 3))
+    print("Recall:", round(recall, 3))
+
+#Heatmap
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(6,5))
+
+sns.heatmap(cm, 
+            annot=True, 
+            fmt='d', 
+            cmap='Blues',
+            xticklabels=["Setosa", "Versicolor", "Virginica"],
+            yticklabels=["Setosa", "Versicolor", "Virginica"])
+
+plt.xlabel("Predicted Label")
+plt.ylabel("Actual Label")
+plt.title("Confusion Matrix Heatmap")
+
+plt.show()
+
+
+
+
+
+Title:
+Naive Bayes Classification using Iris Dataset
+Theory:
+
+Naive Bayes is a supervised classification algorithm based on Bayes’ Theorem. It calculates conditional probability and assumes that all features are independent.
+
+Bayes’ Theorem:
+
+P(A∣B)=
+P(B)
+P(B∣A)P(A)
+	​
+
+P(A)
+P(B∣A)
+P(B∣¬A)
+P(A∣B)=
+P(B)
+P(B∣A)P(A)
+	​
+
+≈0.68,P(B)≈0.25
+P(B)=0.25
+P(B|A)P(A)=0.17
+P(A|B)~0.68
+Posterior = useful evidence / total evidence
+
+Where:
+
+P(A|B) = posterior probability
+P(B|A) = likelihood
+P(A) = prior probability
+P(B) = evidence
+
+Advantages:
+
+Simple and fast
+Requires less training data
+Works well for text classification
+
+The Iris dataset contains flower measurements and species labels. The model classifies flower species based on these measurements.
+
+Applications:
+
+Spam filtering
+Sentiment analysis
+Disease prediction
+
+
+
+
+
+
+
+
+
+
+
+Title:
+Naive Bayes Classification using Iris Dataset
+Theory:
+
+Naive Bayes is a supervised classification algorithm based on Bayes’ Theorem. It calculates conditional probability and assumes that all features are independent.
+
+Bayes’ Theorem:
+
+P(A∣B)=
+P(B)
+P(B∣A)P(A)
+	​
+
+P(A)
+P(B∣A)
+P(B∣¬A)
+P(A∣B)=
+P(B)
+P(B∣A)P(A)
+	​
+
+≈0.68,P(B)≈0.25
+P(B)=0.25
+P(B|A)P(A)=0.17
+P(A|B)~0.68
+Posterior = useful evidence / total evidence
+
+Where:
+
+P(A|B) = posterior probability
+P(B|A) = likelihood
+P(A) = prior probability
+P(B) = evidence
+
+Advantages:
+
+Simple and fast
+Requires less training data
+Works well for text classification
+
+The Iris dataset contains flower measurements and species labels. The model classifies flower species based on these measurements.
+
+Applications:
+
+Spam filtering
+Sentiment analysis
+Disease prediction

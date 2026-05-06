@@ -1,0 +1,213 @@
+#-------------------------------
+#    Data Wrangling II
+Create an “Academic performance” dataset of students and perform the following operations using
+Python.
+1. Scan all variables for missing values and inconsistencies. If there are missing values and/or
+inconsistencies, use any of the suitable techniques to deal with them.
+2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable
+techniques to deal with them.
+3. Apply data transformations on at least one of the variables. The purpose of this
+transformation should be one of the following reasons: to change the scale for better
+understanding of the variable, to convert a non-linear relation into a linear one, or to
+decrease the skewness and convert the distribution into a normal distribution.
+Reason and document your approach properly.
+#-------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import display
+
+#-------------------------------
+#   CREATE ACADEMIC DATASET
+#-------------------------------
+np.random.seed(42)
+
+n = 100
+
+data = {
+    "Student_ID": range(1, n+1),
+    "Study_Hours": np.random.randint(1, 10, n),
+    "Attendance": np.random.randint(50, 100, n),
+    "Marks": np.random.randint(30, 100, n),
+    "Gender": np.random.choice(["Male", "Female"], n),
+    "Department": np.random.choice(["CS", "IT", "ENTC"], n)
+}
+
+df = pd.DataFrame(data)
+
+# Introduce missing values
+#df.loc[5, 'Marks'] = np.nan
+#df.loc[10, 'Attendance'] = np.nan
+
+# Introduce inconsistency
+#df.loc[15, 'Gender'] = "male"   # inconsistent case
+
+display(df.head())
+
+
+#-----------------------------------------
+#  MISSING VALUES & INCONSISTENCY CHECK 
+#-----------------------------------------
+print("Missing Values:")
+display(df.isnull().sum().to_frame("Missing Count"))
+
+# Fix missing values
+df['Marks'] = df['Marks'].fillna(df['Marks'].mean())
+df['Attendance'] = df['Attendance'].fillna(df['Attendance'].median())
+
+# Fix inconsistency
+df['Gender'] = df['Gender'].str.capitalize()
+
+print("\nAfter Cleaning:")
+display(df.isnull().sum().to_frame("Remaining Missing"))
+
+
+#-----------------------------------------
+#  OUTLIER DETECTION (IQR METHOD) 
+#-----------------------------------------
+print("Detecting Outliers")
+
+numeric_cols = ['Study_Hours', 'Attendance', 'Marks']
+
+for col in numeric_cols:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    outliers = df[(df[col] < lower) | (df[col] > upper)]
+
+    print(f"{col} Outliers Count:", len(outliers))
+
+#-----------------------------------------
+#  OUTLIER TREATMENT (CAPPING) 
+#-----------------------------------------
+print("Treating Outliers (Capping)")
+
+for col in numeric_cols:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    df[col] = np.where(df[col] < lower, lower,
+                       np.where(df[col] > upper, upper, df[col]))
+
+display(df.head())
+
+
+#------------------------------------------
+# DATA TRANSFORMATION (LOG TRANSFORMATION) 
+#------------------------------------------
+print("Applying Log Transformation on Marks")
+
+df['Marks_Log'] = np.log(df['Marks'])
+
+display(df[['Marks', 'Marks_Log']].head())
+
+
+#Compare
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+
+# Before (original marks)
+ax[0].hist(df['Marks'], bins=20)
+ax[0].set_title("Marks Distribution")
+
+# After (log transformed)
+ax[1].hist(df['Marks_Log'], bins=20)
+ax[1].set_title("Log Transformed Marks")
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Title:
+Academic Performance Dataset Cleaning and Transformation
+Theory:
+
+Real-world datasets usually contain missing values, outliers, inconsistent entries, and noisy data. These problems reduce data quality and negatively affect machine learning performance. Therefore, data cleaning and transformation are essential steps in data preprocessing.
+
+In this practical, an Academic Performance dataset is created and analyzed. The dataset contains student information such as marks, attendance, and gender. The following operations are performed:
+
+Missing Value Handling
+
+Missing values occur when data entries are incomplete. Common techniques used:
+
+Mean substitution for numeric variables
+Median substitution for skewed data
+Mode substitution for categorical variables
+Inconsistency Detection
+
+Inconsistencies occur when the same information is represented differently, such as:
+
+“M” and “Male”
+“F” and “Female”
+
+These values are standardized to maintain consistency.
+
+Outlier Detection
+
+Outliers are extreme values that differ significantly from normal observations. They may occur due to:
+
+Data entry errors
+Experimental errors
+Rare events
+
+Outliers are detected using:
+
+Interquartile Range (IQR)
+Boxplots
+Z-score methods
+Data Transformation
+
+Transformation modifies data into a more suitable form. Common transformations:
+
+Normalization
+Standardization
+Logarithmic transformation
+
+Purpose of transformation:
+
+Reduce skewness
+Improve data distribution
+Convert non-linear relationships into linear relationships
+Scale variables for better comparison
+
+Applications:
+
+Student performance prediction
+Educational analytics
+Performance monitoring systems

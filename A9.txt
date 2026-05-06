@@ -1,0 +1,85 @@
+#Data Visualization 2
+1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution
+of age with respect to each gender along with the information about whether they survived
+or not. (Column names : 'sex' and 'age')
+2. Write observations on the inference from the above statistics.
+
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = sns.load_dataset("titanic")
+
+# Handle missing values
+df = df.dropna(subset=['age'])
+
+plt.figure(figsize=(8,6))
+sns.boxplot(x='sex', y='age', hue='survived', data=df)
+
+plt.title("Age Distribution by Gender and Survival")
+plt.xlabel("Gender")
+plt.ylabel("Age")
+
+plt.show()
+
+
+
+
+
+
+
+
+Title:
+Boxplot Visualization of Titanic Dataset
+Theory:
+
+A boxplot is a statistical graphical representation used to visualize the distribution and spread of numerical data. It provides important information about:
+
+Median
+Quartiles
+Range
+Outliers
+
+In this practical, boxplots are used to study passenger age distribution with respect to:
+
+Gender (sex)
+Survival status (survived)
+Components of Boxplot:
+Minimum value
+First Quartile (Q1)
+Median (Q2)
+Third Quartile (Q3)
+Maximum value
+Outliers
+Interquartile Range (IQR)
+
+IQR=Q3−Q1
+
+Outliers are detected using:
+
+Lower Limit=Q1−1.5(IQR)
+
+Upper Limit=Q3+1.5(IQR)
+
+Purpose of Boxplot:
+Compare distributions between groups
+Identify variability
+Detect outliers
+Analyze symmetry and skewness
+Observations:
+Median age differs across genders
+Survival patterns can be compared visually
+Outliers indicate unusually high or low ages
+
+Applications:
+
+Healthcare analytics
+Educational statistics
+Financial analysis
+Customer analytics
+
+Libraries used:
+
+Seaborn
+Matplotlib
